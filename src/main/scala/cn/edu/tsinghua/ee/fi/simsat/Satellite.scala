@@ -20,6 +20,9 @@ class Satellite(applier: String) extends Actor with ActorLogging {
   }
 
   override def receive: Receive = {
+    case ControlMessage.DeployCheck() =>
+      sender() ! ControlMessage.DeployCheckReply()
+
     case ControlMessage.ApplyTopo(lmap) =>
       assert(lmap.contains(self.path))
       topoApplier.applyTopo(lmap.find(_._1 == self.path).get._2._2)
