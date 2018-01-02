@@ -50,14 +50,17 @@ object SimulateApp {
         applier
 
       println(s"deploying $nN")
-      system.actorOf(Props(classOf[Satellite], applierDescriptor).withDeploy(Deploy(scope = RemoteScope(nodeAddress))))
+      (
+        system.actorOf(Props(classOf[Satellite], applierDescriptor).withDeploy(Deploy(scope = RemoteScope(nodeAddress)))),
+        nodeAddress
+      )
     }
   }
 
   def setupController(system: ActorSystem, cluster: Cluster, appConfig: Config): Unit = {
     cluster.registerOnMemberUp {
       val deployment = doDeployment(appConfig, system)
-      val dparg = deployment map { d => d.path.toStringWithAddress(d.path.address) }
+      val dparg = deployment map { case(ref, address) => ref.path.toStringWithAddress(address) }
 
       val reader = Class.forName(appConfig.getString("app.controller.reader")).newInstance().asInstanceOf[LatencyReader]
       val inputPath = appConfig.getString("app.controller.input.path")

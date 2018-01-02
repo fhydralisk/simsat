@@ -5,6 +5,7 @@ package cn.edu.tsinghua.ee.fi.simsat
   */
 
 import akka.actor.{Actor, ActorLogging, ActorPath, Cancellable}
+import akka.cluster.Cluster
 import cn.edu.tsinghua.ee.fi.simsat.util.ResultsWriter
 import com.typesafe.config.Config
 import akka.pattern.ask
@@ -23,6 +24,8 @@ import scala.util.{Failure, Success}
 class Controller(deployment: List[String], controllerConfig: Config, latencies: List[List[Long]]) extends Actor with ActorLogging {
 
   import context.dispatcher
+
+  private val cluster = Cluster(context.system)
 
   context become initializing
 
@@ -57,7 +60,7 @@ class Controller(deployment: List[String], controllerConfig: Config, latencies: 
   def initializing: Receive = {
     case ControlMessage.DeployCheckReply() =>
       log.info(s"${sender.path} is deployed.")
-      deployCheckMap = deployCheckMap.updated(sender.path.toStringWithAddress(sender.path.address), true)
+      deployCheckMap = deployCheckMap.updated(sender.path.toStringWithAddress(cluster.selfAddress), true)
   }
 
   def working: Receive = {
@@ -90,7 +93,7 @@ class Controller(deployment: List[String], controllerConfig: Config, latencies: 
 
       implicit val timeout: Timeout = 1 second
       val asks = toApplyTopo map { node =>
-        context.actorSelection(node) ? ControlMessage.ApplyTopo(topo, self.path.toStringWithAddress(self.path.address))
+        context.actorSelection(node) ? ControlMessage.ApplyTopo(topo, self.path.toStringWithAddress(cluster.selfAddress))
       }
 
       // Wait until all satellites received the apply topo message.
