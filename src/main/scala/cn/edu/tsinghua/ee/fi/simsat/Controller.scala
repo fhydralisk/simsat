@@ -77,6 +77,9 @@ class Controller(deployment: List[String], controllerConfig: Config, latencies: 
   }
 
   def next(): Boolean = {
+
+    Thread.sleep(200)
+
     if (latencies.size <= k)
       false
     else {

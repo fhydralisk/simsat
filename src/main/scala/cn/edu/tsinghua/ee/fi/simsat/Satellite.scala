@@ -42,7 +42,10 @@ class Satellite(applier: String) extends Actor with ActorLogging {
     case msg : SatelliteMessage.Message =>
       if (!nextHop(msg)) {
         feedResult(msg.start)
+      } else {
+        Thread.sleep(50)
       }
+
       topoApplier.cleanup()
   }
 
