@@ -34,7 +34,7 @@ object SimulateApp {
   private def doDeployment(config: Config, system: ActorSystem) = {
     val nodesNames = config.getStringList("app.controller.deployment.names").asScala
 
-    val applier = config.getString("app.deployment.applier")
+    val applier = config.getString("app.controller.deployment.applier")
     val parameter = config.getString("app.controller.deployment.parameter")
 
     // Deploy satellite nodes
