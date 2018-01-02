@@ -57,7 +57,7 @@ object SimulateApp {
   def setupController(system: ActorSystem, cluster: Cluster, appConfig: Config): Unit = {
     cluster.registerOnMemberUp {
       val deployment = doDeployment(appConfig, system)
-      val dparg = deployment map { _.path }
+      val dparg = deployment map { d => d.path.toStringWithAddress(d.path.address) }
 
       val reader = Class.forName(appConfig.getString("app.controller.reader")).newInstance().asInstanceOf[LatencyReader]
       val inputPath = appConfig.getString("app.controller.input.path")

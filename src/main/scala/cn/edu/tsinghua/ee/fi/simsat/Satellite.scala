@@ -31,7 +31,7 @@ class Satellite(applier: String) extends Actor with ActorLogging {
             context.actorSelection(path) == context.actorSelection(self.path)
         }.get._2._2
       )
-      controllerPath = controller
+      controllerPath = ActorPath.fromString(controller)
       topo = lmap
       log.info(s"Topo is applied. $lmap")
       sender() ! ControlMessage.ApplyTopoAck()

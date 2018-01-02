@@ -20,13 +20,13 @@ import scala.util.{Failure, Success}
   * @param controllerConfig: The controller's config.
   * @param latencies: input data.
 */
-class Controller(deployment: List[ActorPath], controllerConfig: Config, latencies: List[List[Long]]) extends Actor with ActorLogging {
+class Controller(deployment: List[String], controllerConfig: Config, latencies: List[List[Long]]) extends Actor with ActorLogging {
 
   import context.dispatcher
 
   context become initializing
 
-  private var deployCheckMap: Map[ActorPath, Boolean] = deployment map { _ -> false} toMap
+  private var deployCheckMap: Map[String, Boolean] = deployment map { _ -> false} toMap
 
   private var k = 0
 
@@ -57,7 +57,7 @@ class Controller(deployment: List[ActorPath], controllerConfig: Config, latencie
   def initializing: Receive = {
     case ControlMessage.DeployCheckReply() =>
       log.info(s"${sender.path} is deployed.")
-      deployCheckMap = deployCheckMap.updated(sender.path, true)
+      deployCheckMap = deployCheckMap.updated(sender.path.toStringWithAddress(sender.path.address), true)
   }
 
   def working: Receive = {
@@ -82,7 +82,7 @@ class Controller(deployment: List[ActorPath], controllerConfig: Config, latencie
       // Decide which nodes to send the apply topo messages.
       val toApplyTopo = deployment take thisLatency.size
 
-      // Construct a map: (actorpath -> (number, latency))
+      // Construct a map: (actorpath(string) -> (number, latency))
       val topo = toApplyTopo.zipWithIndex zip thisLatency map {
         case ((nodePath, nodeNumber), latency) =>
           nodePath -> (nodeNumber, latency)
@@ -90,7 +90,7 @@ class Controller(deployment: List[ActorPath], controllerConfig: Config, latencie
 
       implicit val timeout: Timeout = 1 second
       val asks = toApplyTopo map { node =>
-        context.actorSelection(node) ? ControlMessage.ApplyTopo(topo, self.path)
+        context.actorSelection(node) ? ControlMessage.ApplyTopo(topo, self.path.toStringWithAddress(self.path.address))
       }
 
       // Wait until all satellites received the apply topo message.

@@ -14,12 +14,12 @@ object ControlMessage {
     * @param latency: Maps satellite name to satellite seq and latency(network or next hop latency).
     */
 
-  type LatencyMap = Map[ActorPath, (Int, Long)]
+  type LatencyMap = Map[String, (Int, Long)]
 
   final case class DeployCheck()
   final case class DeployCheckReply()
 
-  final case class ApplyTopo(latency: LatencyMap, controller: ActorPath)
+  final case class ApplyTopo(latency: LatencyMap, controller: String)
   final case class ApplyTopoAck()
 
   // Ask the first satellite to start sending message.
