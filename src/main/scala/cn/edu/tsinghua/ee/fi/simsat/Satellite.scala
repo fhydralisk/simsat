@@ -58,7 +58,7 @@ class Satellite(applier: String) extends Actor with ActorLogging {
     assert(tails.nonEmpty)
     if (tails.size > 1) {
       topoApplier.doDelay()
-      context.actorSelection(tails(2)._1) ! message
+      context.actorSelection(tails(1)._1) ! message
       true
     } else
       false
