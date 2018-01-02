@@ -139,7 +139,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
         <configuration>
-          <mainClass>cn.edu.tsinghua.ee.fi.MyRouteMain</mainClass>
+          <mainClass>cn.edu.tsinghua.ee.fi.simsat.SimulateApp</mainClass>
         </configuration>
       </plugin>
     </plugins>
