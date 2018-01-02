@@ -13,7 +13,7 @@ class HopBasedReader extends LatencyReader {
     val file = Source.fromFile(path)
     file.getLines() map { line =>
       line.split(' ') map { _.toDouble * 1000 } map { _.toLong } toList
-    } toList
+    } filter { _.nonEmpty } toList
   }
 
 }
