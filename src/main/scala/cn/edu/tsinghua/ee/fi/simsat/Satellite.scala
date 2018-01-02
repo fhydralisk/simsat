@@ -24,8 +24,13 @@ class Satellite(applier: String) extends Actor with ActorLogging {
       sender() ! ControlMessage.DeployCheckReply()
 
     case ControlMessage.ApplyTopo(lmap) =>
-      assert(lmap.exists(_._1 == self.path))
-      topoApplier.applyTopo(lmap.find(_._1 == self.path).get._2._2)
+      assert(lmap.exists {case (path, _) => context.actorSelection(path) == context.actorSelection(self.path)} )
+      topoApplier.applyTopo(
+        lmap.find {
+          case (path, _) =>
+            context.actorSelection(path) == context.actorSelection(self.path)
+        }.get._2._2
+      )
       controllerPath = sender.path
       topo = lmap
       log.info(s"Topo is applied. $lmap")
