@@ -53,7 +53,7 @@ class Satellite(applier: String) extends Actor with ActorLogging {
     */
   private def nextHop(message: SatelliteMessage.Message): Boolean = {
     val seq = topo.toList.sortBy(_._2._1)
-    val tails = seq.dropWhile(_._1 != self.path)
+    val tails = seq.dropWhile { case (path, _) => context.actorSelection(path) != context.actorSelection(self.path) }
 
     assert(tails.nonEmpty)
     if (tails.size > 1) {
