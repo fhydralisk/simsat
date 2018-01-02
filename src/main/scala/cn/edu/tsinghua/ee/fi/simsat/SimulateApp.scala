@@ -63,7 +63,7 @@ object SimulateApp {
       val inputPath = appConfig.getString("app.controller.input.path")
       val latencies = reader.latencies(inputPath)
 
-      system.actorOf(Props(new Controller(dparg.toList, appConfig.getConfig("app.controller"), latencies)))
+      system.actorOf(Props(new Controller(dparg.toList, appConfig.getConfig("app.controller"), latencies)), name = "controller")
     }
   }
 }

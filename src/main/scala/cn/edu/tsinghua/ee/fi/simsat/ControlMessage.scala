@@ -19,7 +19,7 @@ object ControlMessage {
   final case class DeployCheck()
   final case class DeployCheckReply()
 
-  final case class ApplyTopo(latency: LatencyMap)
+  final case class ApplyTopo(latency: LatencyMap, controller: ActorPath)
   final case class ApplyTopoAck()
 
   // Ask the first satellite to start sending message.

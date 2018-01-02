@@ -90,7 +90,7 @@ class Controller(deployment: List[ActorPath], controllerConfig: Config, latencie
 
       implicit val timeout: Timeout = 1 second
       val asks = toApplyTopo map { node =>
-        context.actorSelection(node) ? ControlMessage.ApplyTopo(topo)
+        context.actorSelection(node) ? ControlMessage.ApplyTopo(topo, self.path)
       }
 
       // Wait until all satellites received the apply topo message.
