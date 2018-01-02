@@ -45,7 +45,7 @@ object SimulateApp {
 
       // Determines whether the class needs a parameter.
       val applierDescriptor = if (parameter.length > 0)
-        applier + '|' + nodeConfig.getConfig(parameter)
+        applier + '|' + nodeConfig.getString(parameter)
       else
         applier
 
