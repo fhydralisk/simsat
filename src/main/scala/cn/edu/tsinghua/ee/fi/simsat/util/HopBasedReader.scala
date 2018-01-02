@@ -12,7 +12,7 @@ class HopBasedReader extends LatencyReader {
   override def latencies(path: String): List[List[Long]] = {
     val file = Source.fromFile(path)
     file.getLines() map { line =>
-      line.split(' ') map { _.toDouble * 1000 } map { _.toLong } toList
+      (line.split(' ') map { _.toDouble * 1000 } map { _.toLong } toList) :+ 0
     } filter { _.nonEmpty } toList
   }
 
