@@ -13,7 +13,7 @@ import scala.sys.process._
 class NetworkLatencyApplier(interface: String) extends TopoApplier {
   override def applyTopo(latency: Long): Unit = {
     cleanup()
-    s"tc qdisc add dev s$interface root netem delay ${latency}ms".!
+    s"tc qdisc add dev $interface root netem delay ${latency}ms".!
   }
 
   override def cleanup(): Unit = {

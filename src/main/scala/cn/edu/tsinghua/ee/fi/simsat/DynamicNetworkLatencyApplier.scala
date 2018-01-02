@@ -24,6 +24,6 @@ class DynamicNetworkLatencyApplier(interface: String) extends TopoApplier {
   }
 
   override def doDelay(): Unit = {
-    s"tc qdisc add dev s$interface root netem delay ${delay}ms".!
+    s"tc qdisc add dev $interface root netem delay ${delay}ms".!
   }
 }
